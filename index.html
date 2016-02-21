@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>InformAR</title>
-<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0"/>
 <meta charset="utf-8"/>
 <style type="text/css">
 * {
@@ -20,9 +20,12 @@
 </style>
 </head>
 <body>
-<div id="container"></div>
-<script type="text/javascript" src="/js/awe-loader-min.js"></script>
-<script type="text/javascript">
+<div id="container" onclick= "getTags()"></div>
+<script src="js/awe-loader-min.js"></script>
+<script src= "js/FileSaver.min.js"></script>
+<script src= "js/html2canvas.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script>
   window.addEventListener('load', function() {
     window.awe.init({
       device_type: awe.AUTO_DETECT_DEVICE_TYPE,
@@ -48,53 +51,7 @@
             ],
             success: function() {
 							awe.setup_scene();
-			        awe.pois.add({ id:'poi_1', position: { x:0, y:0, z:10000 }, visible: false });
-			        awe.projections.add({
-			          id:'projection_1',
-								geometry: { shape: 'cube', x:120, y:120, z:120 },
-			          material:{ type: 'phong', color: 0xFFFFFF },
-                texture: { path: 'awe_by_buildAR.png' },
-			        }, { poi_id: 'poi_1' });
-			        awe.events.add([{
-								id: 'ar_tracking_marker',
-								device_types: {
-									pc: 1,
-									android: 1
-								},
-								register: function(handler) {
-									window.addEventListener('ar_tracking_marker', handler, false);
-								},
-								unregister: function(handler) {
-									window.removeEventListener('ar_tracking_marker', handler, false);
-								},
-								handler: function(event) {
-									if (event.detail) {
-										if (event.detail['64']) { // we are mapping marker #64 to this projection
-											awe.pois.update({
-												data: {
-													visible: true,
-                          							position: { x:0, y:0, z:0 },
-													matrix: event.detail['64'].transform
-												},
-												where: {
-													id: 'poi_1'
-												}
-											});
-										}
-										else {
-											awe.pois.update({
-												data: {
-													visible: false
-												},
-												where: {
-													id: 'poi_1'
-												}
-											});
-										}
-										awe.scene_needs_rendering = 1;
-									}
-								}
-							}])
+
 			      },
           },
           {
@@ -107,6 +64,52 @@
       }
     });
   });
+</script>
+<script>
+	function getTags(){
+		postImage('https://svhacks.github.io/cur.png');
+	}
+		function postImage(imgurl) {
+		  var data = {
+		    'url': imgurl
+		  };
+
+		  return $.ajax({
+		    'url': 'https://api.clarifai.com/v1/tag',
+		    'headers': {
+		      'Authorization': 'Bearer N8arz314rIpxQjXJYczKr9YogMicOW'
+		    },
+		    'data': data,
+		    'type': 'GET'
+		  }).then(function(r){
+		    parseResponse(r);
+		  });
+		}
+
+		function parseResponse(resp) {
+		  var tags = [];
+		  if (resp.status_code === 'OK') {
+		    var results = resp.results;
+		    tags = results[0].result.tag.classes;
+		  } else {
+		    console.log('Sorry, something is wrong.');
+		  }
+
+			console.log(tags);
+		  return tags;
+		}
+
+
+		/*$.ajax({
+			url: 'https://api.wit.ai/message?v=20140826&q=',
+        beforeSend: function(xhr) {
+             xhr.setRequestHeader("Authorization", "Bearer 6QXNMEMFHNY4FJ5ELNFMP5KRW52WFXN5")
+        }, success: function(data){
+            alert(data);
+            //process the JSON data etc
+        }
+		});*/
+
 </script>
 </body>
 </html>
