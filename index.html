@@ -67,15 +67,15 @@
 </script>
 <script>
 	var tags = [];
-	html2canvas(document.body, {
-	  onrendered: function(canvas) {
-			var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
-			window.location.href=image; // it will save locally
-	  }
-	});
+
 	function getTags(){
 		postImage('https://svhacks.github.io/cur.png');
-
+		html2canvas(document.body, {
+		  onrendered: function(canvas) {
+				var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+				window.location.href=image; // it will save locally
+		  }
+		});
 	}
 		function postImage(imgurl) {
 		  var data = {
