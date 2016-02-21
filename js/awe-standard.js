@@ -219,7 +219,7 @@
           }
 
           if (window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
-            MediaStreamTrack.enumerateDevices()(function(source_infos) {
+            MediaStreamTrack.enumerateDevices(function(source_infos) {
               var selected_source = null;
               for (var i = 0; i != source_infos.length; ++i) {
                 var source_info = source_infos[i];
