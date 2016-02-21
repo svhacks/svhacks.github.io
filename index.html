@@ -20,11 +20,19 @@
 </style>
 </head>
 <body>
-<div id="container" onclick= "getTags()"></div>
+<div id="container" onclick= "getTags()">
+	<div id = "card"></div>
+</div>
 <script src="js/awe-loader-min.js"></script>
 <script src= "js/FileSaver.min.js"></script>
 <script src= "js/html2canvas.js"></script>
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+
 <script>
   window.addEventListener('load', function() {
     window.awe.init({
@@ -49,26 +57,37 @@
               '/js/awe-jsartoolkit-dependencies.js',
               '/js/awe.marker_ar.js',
             ],
-						success: function() {
+            success: function() {
 							awe.setup_scene();
-			        awe.pois.add({ id:'poi_1', position: { x:0, y:0, z:10000 }, visible: true});
-							awe.projections.add({
-							   id: 'top_label',
-							   geometry: {shape: 'text', text: "Test", parameters: {
-							      size: 20,
-							      height: 8,
-							      curveSegments: 2,
-							      font: "helvetiker"
-							   }},
-							   rotation: {x:180, y: 0, z:0},
-							   position: {x: -40, y: 0, z: 0},
-							   material: {
-							      type: 'phong',
-							      color: 0xEBE41A
-							   }
-							}, {poi_id: 'poi_1'});
+							//https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&titles=adiyan
 
+							// awe.pois.add({ id:'poi_1', position: { x:0, y:0, z:10000 }, visible:true});
+							// awe.projections.add({
+							//    id: 'projection_1',
+							//    geometry: {shape:'text', text: "Test", parameters: {
+							//       size: 20,
+							//       height: 8,
+							//       curveSegments: 2,
+							//       font: "Arial"
+							//    }},
+							//    position: {x:120, y:120, z:120},
+							//    material: {
+							//       type: 'phong',
+							//       color: 0xEBE41A
+							//    }
+							// }, {poi_id: 'poi_1'});
+							// awe.pois.add({ id:'poi_1', position: { x:0, y:0, z:10000 }, visible: false }); // Add a point of interest
+							// awe.projections.add({
+							//   id:'projection_1',
+							//   geometry: { shape: 'text',Text:"text", x:120, y:120, z:120 },
+							//   material:{ type: 'phong', color: 0xEBE41A},
+							// }, { poi_id: 'poi_1' });                                                       // link the projection with the poi
 
+							// awe.projections.add({
+			        //   id:'projection_1',
+							// 	geometry: { shape: 'cube', x:120, y:120, z:120 },
+			        //
+			        // }, { poi_id: 'poi_1' });
 			      },
           },
           {
@@ -87,13 +106,14 @@
 
 	function getTags(){
 		postImage('https://svhacks.github.io/cur.png');
-		html2canvas(document.body, {
-		  onrendered: function(canvas) {
-				var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
-				console.log(image);
-
-		  }
+		$.ajax({
+			'url': 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&titles='+tags[0],
+			'type':'GET',
+			success: function (data) {
+					console.log(data);
+				}
 		});
+		//$('#container').append('<div class="card"><div class="card-image waves-effect waves-block waves-light"><img class="activator" src="images/office.jpg"></div><div class="card-content"><span class="card-title activator grey-text text-darken-4">Card Title<i class="material-icons right">more_vert</i></span><p><a href="#">This is a link</a></p></div><div class="card-reveal"><span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span><p>Here is some more information about this product that is only revealed once clicked on.</p></div></div>');
 	}
 		function postImage(imgurl) {
 		  var data = {
