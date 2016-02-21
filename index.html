@@ -51,13 +51,23 @@
             ],
 						success: function() {
 							awe.setup_scene();
-			        awe.pois.add({ id:'poi_1', position: { x:0, y:0, z:10000 }, visible: true });
-			        awe.projections.add({
-			          id:'projection_1',
-								geometry: { shape: 'cube', x:120, y:120, z:120 },
-			          material:{ type: 'phong', color: 0xFFFFFF },
-                texture: { path: 'cur.png' },
-			        }, { poi_id: 'poi_1' });
+			        awe.pois.add({ id:'poi_1', position: { x:0, y:0, z:10000 }, visible: true});
+							awe.projections.add({
+							   id: 'top_label',
+							   geometry: {shape: 'text', text: "Test", parameters: {
+							      size: 20,
+							      height: 8,
+							      curveSegments: 2,
+							      font: "helvetiker"
+							   }},
+							   rotation: {x:180, y: 0, z:0},
+							   position: {x: -40, y: 0, z: 0},
+							   material: {
+							      type: 'phong',
+							      color: 0xEBE41A
+							   }
+							}, {poi_id: 'poi_1'});
+
 
 			      },
           },
