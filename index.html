@@ -66,8 +66,16 @@
   });
 </script>
 <script>
+	var tags = [];
+	html2canvas(document.body, {
+	  onrendered: function(canvas) {
+			var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+			window.location.href=image; // it will save locally
+	  }
+	});
 	function getTags(){
 		postImage('https://svhacks.github.io/cur.png');
+
 	}
 		function postImage(imgurl) {
 		  var data = {
@@ -87,7 +95,6 @@
 		}
 
 		function parseResponse(resp) {
-		  var tags = [];
 		  if (resp.status_code === 'OK') {
 		    var results = resp.results;
 		    tags = results[0].result.tag.classes;
@@ -98,18 +105,6 @@
 			console.log(tags);
 		  return tags;
 		}
-
-
-		/*$.ajax({
-			url: 'https://api.wit.ai/message?v=20140826&q=',
-        beforeSend: function(xhr) {
-             xhr.setRequestHeader("Authorization", "Bearer 6QXNMEMFHNY4FJ5ELNFMP5KRW52WFXN5")
-        }, success: function(data){
-            alert(data);
-            //process the JSON data etc
-        }
-		});*/
-
 </script>
 </body>
 </html>
